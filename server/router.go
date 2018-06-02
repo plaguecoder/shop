@@ -1,14 +1,20 @@
 package server
 
 import (
+	"database/sql"
 	"github.com/gorilla/mux"
 	"net/http"
+	"shop/handler"
 )
 
-func NewRouter() *mux.Router {
+func NewRouter(db *sql.DB) *mux.Router {
 	router := mux.NewRouter()
 
-	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./frontend/dist")))
+	router.PathPrefix("/homepage").Handler(http.FileServer(http.Dir("./frontend/dist")))
+
+	addMerchantHandler := handler.AddMerchantHandler(db)
+
+	router.HandleFunc("/merchants", addMerchantHandler).Methods(http.MethodPut)
 
 	router.HandleFunc("/ping", pingHandler).Methods("GET")
 	return router
