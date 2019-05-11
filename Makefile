@@ -1,5 +1,5 @@
 .PHONY: all
-all: build-deps build fmt vet lint test
+all: build fmt vet lint test
 
 ALL_PACKAGES=$(shell go list ./... | grep -v -e "vendor" -e "frontend")
 UNIT_TEST_PACKAGES=$(shell  go list ./... | grep -v -e "vendor" -e "frontend")
@@ -10,17 +10,13 @@ DB_PORT=5432
 APP_EXECUTABLE="out/shop"
 
 setup:
-	go get -u github.com/golang/dep/cmd/dep
-	go get -u github.com/golang/lint/golint
-
-build-deps:
-	dep ensure
+	go get -u golang.org/x/lint/golint
 
 compile:
 	mkdir -p out/
 	go build -o $(APP_EXECUTABLE)
 
-build: build-deps compile fmt vet lint
+build: compile fmt vet lint
 
 install:
 	go install ./...
