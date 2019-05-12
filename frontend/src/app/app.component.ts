@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ConfigService} from './app.service'
+import { ConfigService } from './app.service'
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -10,6 +10,7 @@ import { ConfigService} from './app.service'
 export class AppComponent implements OnInit {
   registerForm: FormGroup;
   submitted = false;
+  success = false;
 
 
   constructor(private formBuilder: FormBuilder, private service: ConfigService) { }
@@ -17,14 +18,15 @@ export class AppComponent implements OnInit {
     this.registerForm = this.formBuilder.group({
       name: ['', Validators.required],
       area: ['', Validators.required],
-      amountDue: ['', [Validators.required,, Validators.minLength(1)]],
+      amountDue: ['', [Validators.required, , Validators.minLength(1)]],
       phone: ['', [Validators.required, Validators.minLength(10)]]
     });
   }
 
-  get f() { 
+  get f() {
     //console.log(this.registerForm)
-    return this.registerForm.controls; }
+    return this.registerForm.controls;
+  }
 
   onSubmit() {
     //console.log(this.f.phone.errors)
@@ -35,11 +37,18 @@ export class AppComponent implements OnInit {
       return;
     }
 
-    alert('SUCCESS!! :-)')
     this.service.addCustomer(this.registerForm.getRawValue())
-    .subscribe((data) =>{
-      console.log('response: ',data)
-    })
+      .subscribe(response => {
+        console.log('response: ', response)
+        if (response.status === 200) {
+          this.success = true
+          this.submitted = false
+          this.registerForm.reset()
+          setTimeout(() => {
+            this.success = false
+          }, 3000)
+        }
+      })
   }
   submitData() {
     //console.log('customer: ', this.name, this.amountDue, this.phone, this.area)
