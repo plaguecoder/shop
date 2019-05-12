@@ -15,9 +15,11 @@ func NewRouter(db *sqlx.DB) *mux.Router {
 	addCustomerHandler := handler.AddCustomerHandler(db)
 	getCustomerHandler := handler.GetCustomerHandler(db)
 	getCustomersHandler := handler.GetCustomersHandler(db)
+	addTransactionHandler := handler.AddTransactionHandler(db)
 
 	router.HandleFunc("/customer", addCustomerHandler).Methods(http.MethodPut)
 	router.HandleFunc("/customer/{id}", getCustomerHandler).Methods(http.MethodGet)
+	router.HandleFunc("/transaction", addTransactionHandler).Methods(http.MethodPut)
 	router.HandleFunc("/customers", getCustomersHandler).Methods(http.MethodGet)
 
 	router.HandleFunc("/ping", pingHandler).Methods("GET")

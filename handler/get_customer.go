@@ -16,7 +16,8 @@ import (
 func GetCustomerHandler(db *sqlx.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		customerRepository := &repository.Customers{DB: db}
+		customersRepository := &repository.Customers{DB: db}
+		transactionsRepository := &repository.Transactions{DB: db}
 
 		id := strings.TrimPrefix(r.URL.Path, "/customer/")
 
@@ -30,7 +31,7 @@ func GetCustomerHandler(db *sqlx.DB) http.HandlerFunc {
 			return
 		}
 
-		customer, err := customerRepository.GetCustomer(customerID)
+		customer, err := customersRepository.GetCustomer(customerID)
 		if err == sql.ErrNoRows {
 			logger.Logger.Printf("[GetCustomersHandler]: [GetCustomer]: %v for customerID: %d \n", err, customerID)
 
@@ -46,7 +47,12 @@ func GetCustomerHandler(db *sqlx.DB) http.HandlerFunc {
 			return
 		}
 
-		response.Success(customer)
+		transactions, err := transactionsRepository.GetAllTransactions(customerID)
+		if err != nil {
+			logger.Logger.Printf("[GetCustomersHandler]: %v \n", err)
+		}
+
+		response.Success(customer, transactions)
 		logger.Logger.Println("[GetCustomerHandler]: successfully served all customers.")
 		writeGetCustomerResponse(w, response)
 		return

@@ -1,12 +1,23 @@
 package contracts
 
-import "net/http"
+import (
+	"net/http"
+)
 
 type Customer struct {
 	ID          int64  `json:"id,omitempty"`
 	Name        string `json:"name,omitempty"`
 	Area        string `json:"area,omitempty"`
 	Phone       string `json:"phone,omitempty"`
+	Description string `json:"description,omitempty"`
+}
+
+type Transaction struct {
+	ID          int64  `json:"id,omitempty"`
+	CustomerID  int64  `json:"customer_id,omitempty" db:"customer_id"`
+	Amount      int64  `json:"amount,omitempty"`
+	Date        string `json:"date,omitempty"`
+	Type        string `json:"type,omitempty"`
 	Description string `json:"description,omitempty"`
 }
 
@@ -23,7 +34,7 @@ type AddCustomerResponse struct {
 
 func (acr *AddCustomerResponse) Success() {
 	acr.StatusCode = http.StatusOK
-	acr.Data = "Successfully added a customers."
+	acr.Data = "Successfully added given customer."
 }
 
 func (acr *AddCustomerResponse) BadRequest(title, message string) {
@@ -42,15 +53,20 @@ func (acr *AddCustomerResponse) ServerError(message string) {
 	}
 }
 
-type GetCustomerResponse struct {
-	StatusCode int       `json:"-"`
-	Data       *Customer `json:"data,omitempty"`
-	Error      *Error    `json:"error,omitempty"`
+type GetCustomerResponseData struct {
+	*Customer
+	Transactions []Transaction `json:"transactions"`
 }
 
-func (gcr *GetCustomerResponse) Success(customer *Customer) {
+type GetCustomerResponse struct {
+	StatusCode int                      `json:"-"`
+	Data       *GetCustomerResponseData `json:"data,omitempty"`
+	Error      *Error                   `json:"error,omitempty"`
+}
+
+func (gcr *GetCustomerResponse) Success(customer *Customer, transaction []Transaction) {
 	gcr.StatusCode = http.StatusOK
-	gcr.Data = customer
+	gcr.Data = &GetCustomerResponseData{Transactions: transaction, Customer: customer}
 }
 
 func (gcr *GetCustomerResponse) BadRequest(title, message string) {
@@ -84,6 +100,33 @@ func (gacr *GetAllCustomersResponse) ServerError(message string) {
 	gacr.StatusCode = http.StatusInternalServerError
 	gacr.Data = []Customer{}
 	gacr.Error = &Error{
+		Title:   "Internal Server Error",
+		Message: message,
+	}
+}
+
+type AddTransactionResponse struct {
+	StatusCode int
+	Data       string
+	Error      *Error
+}
+
+func (atr *AddTransactionResponse) Success() {
+	atr.StatusCode = http.StatusOK
+	atr.Data = "Successfully added transaction for given user."
+}
+
+func (atr *AddTransactionResponse) BadRequest(title, message string) {
+	atr.StatusCode = http.StatusBadRequest
+	atr.Error = &Error{
+		Title:   title,
+		Message: message,
+	}
+}
+
+func (atr *AddTransactionResponse) ServerError(message string) {
+	atr.StatusCode = http.StatusInternalServerError
+	atr.Error = &Error{
 		Title:   "Internal Server Error",
 		Message: message,
 	}

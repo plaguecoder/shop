@@ -43,7 +43,7 @@ func AddCustomerHandler(db *sqlx.DB) http.HandlerFunc {
 			return
 		}
 
-		logger.Logger.Println("[AddCustomerHandler]: successfully added a customers.")
+		logger.Logger.Println("[AddCustomerHandler]: successfully added given customer.")
 
 		response.Success()
 		writeAddCustomerResponse(w, response)
@@ -55,7 +55,7 @@ func writeAddCustomerResponse(w http.ResponseWriter, response *contracts.AddCust
 	responseBytes, err := json.Marshal(response)
 	if err != nil {
 		logger.Logger.Printf("[GetCustomersHandler]: [WriteResponse]: %v \n", err)
-		w.WriteHeader(http.StatusInternalServerError)
+		response.ServerError(err.Error())
 		return
 	}
 
