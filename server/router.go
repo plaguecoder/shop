@@ -10,7 +10,7 @@ import (
 func NewRouter(db *sql.DB) *mux.Router {
 	router := mux.NewRouter()
 
-	router.PathPrefix("/homepage").Handler(http.FileServer(http.Dir("./frontend/dist")))
+	router.PathPrefix("/homepage").Handler(http.StripPrefix("/homepage", http.FileServer(http.Dir("./frontend/dist"))))
 
 	addMerchantHandler := handler.AddMerchantHandler(db)
 

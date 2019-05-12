@@ -1,5 +1,5 @@
 .PHONY: all
-all: build fmt vet lint test
+all: build build-frontend fmt vet lint test
 
 ALL_PACKAGES=$(shell go list ./... | grep -v -e "vendor" -e "frontend")
 UNIT_TEST_PACKAGES=$(shell  go list ./... | grep -v -e "vendor" -e "frontend")
@@ -11,12 +11,16 @@ APP_EXECUTABLE="out/shop"
 
 setup:
 	go get -u golang.org/x/lint/golint
+	sudo npm install -g @angular/cli
 
 compile:
 	mkdir -p out/
 	go build -o $(APP_EXECUTABLE)
 
 build: compile fmt vet lint
+
+build-frontend:
+	cd ./frontend;npm install; ng build --base-href /homepage/;
 
 install:
 	go install ./...
