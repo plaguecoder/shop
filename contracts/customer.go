@@ -3,7 +3,7 @@ package contracts
 type Customer struct {
 	ID          int64  `json:"id,omitempty"`
 	Name        string `json:"name"`
-	Area        string `json:"data,omitempty"`
+	Area        string `json:"area,omitempty"`
 	Phone       string `json:"phone,omitempty"`
 	Description string `json:"description,omitempty"`
 }
