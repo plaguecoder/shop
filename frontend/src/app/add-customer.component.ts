@@ -1,25 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfigService } from './app.service'
+import { Router } from '@angular/router'
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  templateUrl: './add-customer.component.html',
+  styleUrls: ['./add-customer.component.css'],
   providers: [ConfigService]
 })
-export class AppComponent implements OnInit {
+export class AddCustomerComponent implements OnInit {
   registerForm: FormGroup;
   submitted = false;
   success = false;
 
 
-  constructor(private formBuilder: FormBuilder, private service: ConfigService) { }
+  constructor(private formBuilder: FormBuilder, private service: ConfigService, private router: Router) { }
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
       name: ['', Validators.required],
       area: ['', Validators.required],
       amountDue: ['', [Validators.required, , Validators.minLength(1)]],
-      phone: ['', [Validators.required, Validators.minLength(10)]]
+      phone: ['', [Validators.required, Validators.minLength(10)]],
+      description: ['']
     });
   }
 
@@ -39,25 +41,16 @@ export class AppComponent implements OnInit {
 
     this.service.addCustomer(this.registerForm.getRawValue())
       .subscribe(response => {
-        console.log('response: ', response)
+        //console.log('response: ', response)
         if (response.status === 200) {
-          this.success = true
           this.submitted = false
           this.registerForm.reset()
-          setTimeout(() => {
-            this.success = false
-          }, 3000)
+          this.router.navigate(['/'])
         }
       })
   }
-  submitData() {
-    //console.log('customer: ', this.name, this.amountDue, this.phone, this.area)
-  }
 
-  // validateData() {
-  //   if (this.name != '' && this.area != '' && this.phone.toString().length > 9 && this.phone.toString().length < 11 && this.amountDue != 0) {
-  //     return false
-  //   }
-  //   return true
-  // }
+  goBack() {
+    this.router.navigate(['/'])
+  }
 }

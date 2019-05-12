@@ -1,0 +1,6 @@
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item" *ngFor='let elem of bredcrumbList'><a (click)=goToUrl(elem)>{{elem}}</a></li>
+        <!-- <li class="breadcrumb-item active" aria-current="page">Data</li> -->
+    </ol>
+</nav>

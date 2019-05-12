@@ -2,12 +2,33 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6 offset-md-3">
-                <h1>All customers</h1>
-                
-            </div>
-            <div class="col-md-3">
-                <button class="btn btn-primary" (click)="goToAddCustomer()">Add customer</button>
+                <h2>All customers</h2>
+                <br>
+                <div *ngIf='customers.length==0'> No records</div>
+                <div class="table-responsive" *ngIf='customers.length>0'>
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Area</th>
+                            <th scope="col">Phone</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor='let customer of customers;let i = index' (click)=goToCustomerDetails(customer)>
+                            <th scope="row">{{i+1}}</th>
+                            <td>{{customer.name}}</td>
+                            <td>{{customer.area}}</td>
+                            <td>{{customer.phone}}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
+        <div class="col-md-3">
+            <button class="btn btn-primary" (click)="goToAddCustomer()">Add customer</button>
+        </div>
     </div>
+</div>
 </div>
