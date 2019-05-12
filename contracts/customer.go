@@ -2,7 +2,7 @@ package contracts
 
 type Customer struct {
 	ID          int64  `json:"id,omitempty"`
-	Name        string `json:"name"`
+	Name        string `json:"name,omitempty"`
 	Area        string `json:"area,omitempty"`
 	Phone       string `json:"phone,omitempty"`
 	Description string `json:"description,omitempty"`
@@ -19,8 +19,14 @@ type AddCustomerResponse struct {
 	Error      *Error `json:"error,omitempty"`
 }
 
-type GetCustomersResponse struct {
+type GetCustomerResponse struct {
 	StatusCode int
-	Data       []Customer `json:"data,omitempty"`
+	Data       *Customer `json:"data,omitempty"`
+	Error      *Error    `json:"error,omitempty"`
+}
+
+type GetAllCustomersResponse struct {
+	StatusCode int
+	Data       []Customer `json:"data"`
 	Error      *Error     `json:"error,omitempty"`
 }
