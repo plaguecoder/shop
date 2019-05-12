@@ -12,24 +12,24 @@ import (
 
 func AddCustomerHandler(db *sqlx.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		response := &contracts.AddCustomerResponse{}
 		bytes, err := ioutil.ReadAll(r.Body)
 		if err != nil {
-			panic(err)
+			logger.Logger.Printf("[AddCustomerHandler]: %v \n", err)
+
+			response.BadRequest("Bad Request", err.Error())
+			writeAddCustomerResponse(w, response)
+			return
 		}
 
 		customer := &contracts.Customer{}
 		err = json.Unmarshal(bytes, customer)
 		if err != nil {
 			logger.Logger.Printf("[AddCustomerHandler]: %v \n", err)
-			response := contracts.AddCustomerResponse{
-				StatusCode: http.StatusBadRequest,
-				Error: &contracts.Error{
-					Title:   "Bad Request",
-					Message: err.Error(),
-				},
-			}
 
-			writeAddCustomerResponse(w, &response)
+			response.BadRequest("Bad Request", err.Error())
+			writeAddCustomerResponse(w, response)
 			return
 		}
 
@@ -37,25 +37,16 @@ func AddCustomerHandler(db *sqlx.DB) http.HandlerFunc {
 		err = customerRepository.AddCustomer(customer)
 		if err != nil {
 			logger.Logger.Printf("[AddCustomerHandler]: %v \n", err)
-			response := contracts.AddCustomerResponse{
-				StatusCode: http.StatusInternalServerError,
-				Error: &contracts.Error{
-					Title:   "Internal Server Error",
-					Message: err.Error(),
-				},
-			}
 
-			writeAddCustomerResponse(w, &response)
+			response.ServerError(err.Error())
+			writeAddCustomerResponse(w, response)
 			return
 		}
 
-		response := contracts.AddCustomerResponse{
-			StatusCode: http.StatusOK,
-			Data:       "Successfully added a customers.",
-		}
-
 		logger.Logger.Println("[AddCustomerHandler]: successfully added a customers.")
-		writeAddCustomerResponse(w, &response)
+
+		response.Success()
+		writeAddCustomerResponse(w, response)
 		return
 	}
 }

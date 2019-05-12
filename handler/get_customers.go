@@ -13,29 +13,19 @@ func GetCustomersHandler(db *sqlx.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		customerRepository := &repository.Customers{DB: db}
+		response := &contracts.GetAllCustomersResponse{}
 		customers, err := customerRepository.GetAllCustomers()
 		if err != nil {
 			logger.Logger.Printf("[GetCustomersHandler]: %v \n", err)
-			response := contracts.GetAllCustomersResponse{
-				StatusCode: http.StatusInternalServerError,
-				Data:       []contracts.Customer{},
-				Error: &contracts.Error{
-					Title:   "Internal Server Error",
-					Message: err.Error(),
-				},
-			}
+			response.ServerError(err.Error())
 
-			writeResponse(w, &response)
+			writeResponse(w, response)
 			return
 		}
 
-		response := contracts.GetAllCustomersResponse{
-			StatusCode: http.StatusOK,
-			Data:       customers,
-		}
-
+		response.Success(customers)
 		logger.Logger.Println("[GetCustomersHandler]: successfully served all customers.")
-		writeResponse(w, &response)
+		writeResponse(w, response)
 		return
 	}
 }
@@ -44,7 +34,7 @@ func writeResponse(w http.ResponseWriter, response *contracts.GetAllCustomersRes
 	responseBytes, err := json.Marshal(response)
 	if err != nil {
 		logger.Logger.Printf("[GetCustomersHandler]: [WriteResponse]: %v \n", err)
-		w.WriteHeader(http.StatusInternalServerError)
+		response.ServerError(err.Error())
 		return
 	}
 

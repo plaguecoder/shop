@@ -9,7 +9,7 @@ import (
 
 const (
 	insertCustomerSQL   = `insert into customers (name, area, phone, description) values ($1, $2, $3, $4);`
-	getAllCustomersSQL  = `select id, name, area, phone, description from customers limit 1;`
+	getAllCustomersSQL  = `select id, name, area, phone, description from customers`
 	getCustomersByIDSQL = `select id, name, area, phone, description from customers where id = $1;`
 )
 
