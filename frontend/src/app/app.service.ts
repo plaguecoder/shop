@@ -7,6 +7,6 @@ export class ConfigService {
 
   addCustomer(data) {
     console.log('data: ', data)
-    return this.http.put("http://localhost:8080/merchants", data, { observe: 'response' });
+    return this.http.put("http://localhost:8080/customer", data, { observe: 'response' });
   }
 }

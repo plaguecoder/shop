@@ -1,10 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"gopkg.in/urfave/cli.v1"
 	"net/http"
 	"os"
+	"shop/logger"
 	"shop/repository"
 	"shop/server"
 )
@@ -13,6 +13,8 @@ func main() {
 	db := repository.LoadDatabase()
 	defer db.Close()
 
+	logger.Init()
+
 	clientApp := cli.NewApp()
 	clientApp.Name = "Shop Service"
 	clientApp.Commands = []cli.Command{
@@ -20,7 +22,7 @@ func main() {
 			Name:        "start",
 			Description: "Start Shop server",
 			Action: func(c *cli.Context) error {
-				fmt.Println("server is running on port 8080")
+				logger.Logger.Println("server is running on port 8080")
 				router := server.NewRouter(db)
 				http.ListenAndServe(":8080", router)
 				return nil
@@ -28,7 +30,7 @@ func main() {
 		},
 		{
 			Name:        "migrate",
-			Description: "Run database migrations for auth-service",
+			Description: "Run database migrations for shop",
 			Action: func(c *cli.Context) error {
 				return repository.RunDatabaseMigrations()
 			},

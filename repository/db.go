@@ -2,29 +2,28 @@ package repository
 
 import (
 	"database/sql"
-	"log"
+	"github.com/jmoiron/sqlx"
+	"shop/logger"
 
 	// pq driver for postgres
 	_ "github.com/lib/pq"
 	"github.com/mattes/migrate"
 	"github.com/mattes/migrate/database/postgres"
 	_ "github.com/mattes/migrate/source/file" // get db migration from path
-
-	"fmt"
 )
 
 const appDatabaseMigrationPath = "./db/migrations"
 const connectionURL = "postgres://postgres:@localhost:5432/shop_test?sslmode=disable"
 const migrationsPath = "file://./db/migrations"
 
-func LoadDatabase() *sql.DB {
-	db, err := sql.Open("postgres", connectionURL)
+func LoadDatabase() *sqlx.DB {
+	db, err := sqlx.Open("postgres", connectionURL)
 	if err != nil {
-		log.Fatalf("failed to load the database: %s", err)
+		logger.Logger.Fatalf("failed to load the database: %s", err)
 	}
 
 	if err = db.Ping(); err != nil {
-		log.Fatalf("ping to the database host failed: %s", err)
+		logger.Logger.Fatalf("ping to the database host failed: %s", err)
 	}
 
 	return db
@@ -40,7 +39,7 @@ func RunDatabaseMigrations() error {
 		return err
 	}
 
-	fmt.Println("Migration successful")
+	logger.Logger.Println("Migration successful")
 
 	return nil
 }

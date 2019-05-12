@@ -1,20 +1,22 @@
 package server
 
 import (
-	"database/sql"
 	"github.com/gorilla/mux"
+	"github.com/jmoiron/sqlx"
 	"net/http"
 	"shop/handler"
 )
 
-func NewRouter(db *sql.DB) *mux.Router {
+func NewRouter(db *sqlx.DB) *mux.Router {
 	router := mux.NewRouter()
 
 	router.PathPrefix("/homepage").Handler(http.StripPrefix("/homepage", http.FileServer(http.Dir("./frontend/dist"))))
 
-	addMerchantHandler := handler.AddMerchantHandler(db)
+	addCustomerHandler := handler.AddCustomerHandler(db)
+	getCustomersHandler := handler.GetCustomersHandler(db)
 
-	router.HandleFunc("/merchants", addMerchantHandler).Methods(http.MethodPut)
+	router.HandleFunc("/customer", addCustomerHandler).Methods(http.MethodPut)
+	router.HandleFunc("/customers", getCustomersHandler).Methods(http.MethodGet)
 
 	router.HandleFunc("/ping", pingHandler).Methods("GET")
 	return router
