@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"database/sql"
 	"encoding/json"
 	"github.com/jmoiron/sqlx"
 	"io/ioutil"
@@ -32,6 +33,24 @@ func AddCustomerHandler(db *sqlx.DB) http.HandlerFunc {
 			writeAddCustomerResponse(w, response)
 			return
 		}
+
+		areaRepository := &repository.Areas{DB: db}
+		area, err := areaRepository.GetArea(customer.Area)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				logger.Logger.Printf("[AddCustomerHandler]: [GetArea]: %v \n", err)
+				response.BadRequest("Bad Request", "Area not Found please add it first")
+				writeAddCustomerResponse(w, response)
+				return
+			}
+
+			logger.Logger.Printf("[AddCustomerHandler]: %v \n", err)
+			response.ServerError(err.Error())
+			writeAddCustomerResponse(w, response)
+			return
+		}
+
+		customer.AreaID = area.ID
 
 		customerRepository := &repository.Customers{DB: db}
 		err = customerRepository.AddCustomer(customer)
