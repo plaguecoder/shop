@@ -1,0 +1,28 @@
+<div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                <h2 class="headingColor">All areas</h2>
+                <br>
+                <div *ngIf='areas.length==0'> No records</div>
+                <div class="table-responsive" *ngIf='areas.length>0'>
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="tableHeadingColor">#</th>
+                                <th scope="col" class="tableHeadingColor">Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor='let area of areas;let i = index'>
+                                <th scope="row">{{i+1}}</th>
+                                <td>{{area}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary" (click)="goToAddArea()" ><i class="fas fa-plus"></i> area</button>
+            </div>
+        </div>
+    </div>

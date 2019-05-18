@@ -9,6 +9,7 @@ import { ActivatedRoute } from '@angular/router'
     templateUrl: './breadcrumb.component.html',
     providers: [ConfigService]
 })
+
 export class BreadcrumbComponent implements OnInit {
 
     sub: any
@@ -19,7 +20,6 @@ export class BreadcrumbComponent implements OnInit {
 
     constructor(private route: ActivatedRoute, private router: Router) {
 
-
         router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
                 this.name = event.url
@@ -27,6 +27,8 @@ export class BreadcrumbComponent implements OnInit {
                 this.bredcrumbs['addCustomer'] = "Add customer"
                 this.bredcrumbs['customer-detail'] = "Customer details"
                 this.bredcrumbs['customer-add-transaction'] = "Add transaction"
+                this.bredcrumbs['areas'] = "Areas"
+                this.bredcrumbs['add-area'] = "Add Area"
                 let list = this.name.slice(1).split('/')
                 if (list.length > 1) {
                     this.id = list[1]
@@ -55,7 +57,7 @@ export class BreadcrumbComponent implements OnInit {
         for (let i in this.bredcrumbs) {
             if (value === this.bredcrumbs[i]) {
                 console.log('i: ', '/' + i, this.id)
-                if (i == "") {
+                if (i == "" || i=='areas' || i=='add-area') {
                     this.router.navigate(['/' + i])
                 } else {
                     this.router.navigate(['/' + i, this.id])

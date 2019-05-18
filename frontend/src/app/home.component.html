@@ -1,18 +1,17 @@
-<div class="jumbotron">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6 offset-md-3">
-                <h2>All customers</h2>
-                <br>
-                <div *ngIf='customers.length==0'> No records</div>
-                <div class="table-responsive" *ngIf='customers.length>0'>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <h2 class="headingColor">All customers</h2>
+            <br>
+            <div *ngIf='customers.length==0'> No records</div>
+            <div class="table-responsive" *ngIf='customers.length>0'>
                 <table class="table table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Area</th>
-                            <th scope="col">Phone</th>
+                            <th scope="col" class="tableHeadingColor">#</th>
+                            <th scope="col" class="tableHeadingColor">Name</th>
+                            <th scope="col" class="tableHeadingColor">Area</th>
+                            <th scope="col" class="tableHeadingColor">Phone</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -26,9 +25,8 @@
                 </table>
             </div>
         </div>
-        <div class="col-md-3">
-            <button class="btn btn-primary" (click)="goToAddCustomer()">Add customer</button>
+        <div class="col-md-2">
+            <button class="btn btn-primary" (click)="goToAddCustomer()"><i class="fas fa-plus"></i> customer</button>
         </div>
     </div>
-</div>
 </div>

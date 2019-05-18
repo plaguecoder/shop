@@ -2,3 +2,20 @@
 .backgroundColor{
     background-color: #e9ecef
 }
+.newFont{
+    font-family: museo-sans,"Helvetica Neue",Helvetica,Arial,Tahoma,sans-serif
+}
+.greenFont{
+    color: green
+}
+.redFont{
+    color: red
+}
+
+.headingColor{
+  color: #f5821f;
+}
+
+.tableHeadingColor{
+    color: #008cbc
+}

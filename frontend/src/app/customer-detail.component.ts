@@ -14,27 +14,41 @@ export class CustomerDetailComponent implements OnInit {
   sub: any
   id: any
   transactions = []
-  customer : {}
+  customer: {}
 
-  constructor(private route: ActivatedRoute, private router: Router, private service: ConfigService) {}
+  constructor(private route: ActivatedRoute, private router: Router, private service: ConfigService) { }
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
-        this.id = params['id']
+      this.id = params['id']
     })
 
     this.service.getCustomer(this.id)
-        .subscribe((response) => {
-         //   console.log('customer', response)
-            this.customer = response.body['data']
-            this.transactions = this.customer['transactions']
-        })
+      .subscribe((response) => {
+        this.customer = response.body['data']
+        this.transactions = this.customer['transactions']
+        console.log('transa', this.transactions.length)
+        let amount = 0
+        for (let i = this.transactions.length-1; i != -1; i--) {
+          console.log('i: ',i)
+          
+          if(this.transactions[i].type === 'CREDIT'){
+            amount = amount + this.transactions[i].amount
+            this.transactions[i]['total'] = amount
+            //console.log(this.transactions[i]['total'])
+          }
+          if(this.transactions[i].type === 'DEBIT'){
+            amount = amount - this.transactions[i].amount
+            this.transactions[i]['total'] = amount
+          }
+        }
+      })
   }
 
   goBack() {
     this.router.navigate(['/'])
   }
 
-  goToAddTransactionPage(){
-      this.router.navigate(['/customer-add-transaction', this.id])
+  goToAddTransactionPage() {
+    this.router.navigate(['/customer-add-transaction', this.id])
   }
 }

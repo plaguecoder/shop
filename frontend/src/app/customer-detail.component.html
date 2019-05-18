@@ -1,53 +1,55 @@
-<div class="jumbotron">
-    <div class="container">
-        <div class="row">
-            <a (click)='goBack()'><i class="fas fa-arrow-left fa-2x"></i></a>
-            <div class="col-md-6 offset-md-3">
-                <h2>Customer details</h2>
-                <br>
-                <div *ngIf='customer'>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h6>Customer id : {{customer.id}}</h6>
-                            <h6>Name : {{customer.name}}</h6>
-                        </div>
-                        <div class="col-md-6">
-                            <h6>Area : {{customer.area}}</h6>
-                            <h6>Phone : {{customer.phone}}</h6>
-                        </div>
-                    </div>
-                </div>
-                <br>
+<div class="container-fluid">
+    <div class="row">
+        <a (click)='goBack()'><i class="fas fa-arrow-left "></i></a>
+        <div class="col-md-8 ">
+            <h2 class="headingColor">Customer details</h2>
+            <br>
+            <div *ngIf='customer'>
                 <div class="row">
-                    <div class="col-md-10">
-                        <h4>Transactions</h4>
+                    <div class="col-md-6">
+                        <h6>Customer id : {{customer.id}}</h6>
+                        <h6>Name : {{customer.name}}</h6>
                     </div>
+                    <div class="col-md-6">
+                        <h6>Area : {{customer.area}}</h6>
+                        <h6>Phone : {{customer.phone}}</h6>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-10">
+                    <h4>Transactions</h4>
+                </div>
 
-                    <div class="col-md-2">
-                        <a (click)='goToAddTransactionPage()'><i class="fas fa-plus fa-2x"></i></a>
-                    </div>
+                <div class="col-md-2">
+                    <a (click)='goToAddTransactionPage()'><i class="fas fa-plus "></i></a>
                 </div>
-                <h5 *ngIf='transactions.length==0' class="text-center"> No transactions</h5>
-                <div class="table-responsive" *ngIf='transactions.length > 0'>
-                    <table class="table table-bordered table-hover">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Date</th>
-                                <th scope="col">Type</th>
-                                <th scope="col">Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor='let transaction of transactions;let i = index'>
-                                <th scope="row">{{i+1}}</th>
-                                <td>{{transaction.date | date }}</td>
-                                <td>{{transaction.type}}</td>
-                                <td>{{transaction.amount}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            </div>
+            <h5 *ngIf='transactions.length==0' class="text-center"> No transactions</h5>
+            <div class="table-responsive" *ngIf='transactions.length > 0'>
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="tableHeadingColor">#</th>
+                            <th scope="col" class="tableHeadingColor">Date</th>
+                            <th scope="col" class="tableHeadingColor">Amount recieved</th>
+                            <th scope="col" class="tableHeadingColor">Amount lent</th>
+                            <th scope="col" class="tableHeadingColor">Amount pending</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor='let transaction of transactions;let i = index'>
+                            <th scope="row">{{i+1}}</th>
+                            <td>{{transaction.date | date }}</td>
+                            <td *ngIf="transaction.type=='DEBIT'" class="greenFont">{{transaction.amount}}</td>
+                            <td *ngIf="transaction.type!='DEBIT'">-</td>
+                            <td *ngIf="transaction.type=='CREDIT'" class="redFont">{{transaction.amount}}</td>
+                            <td *ngIf="transaction.type!='CREDIT'">-</td>
+                            <td>{{transaction.total}}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
