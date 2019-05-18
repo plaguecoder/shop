@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/rs/cors"
 	"gopkg.in/urfave/cli.v1"
 	"net/http"
 	"os"
@@ -24,7 +25,11 @@ func main() {
 			Action: func(c *cli.Context) error {
 				logger.Logger.Println("server is running on port 8080")
 				router := server.NewRouter(db)
-				http.ListenAndServe(":8080", router)
+				cor := cors.New(cors.Options{
+					AllowedOrigins: []string{"http://localhost:4200"},
+				})
+				handler := cor.Handler(router)
+				http.ListenAndServe(":8080", handler)
 				return nil
 			},
 		},
